@@ -19,14 +19,8 @@ let price = [];
 let land_area = [];
 let build_area = [];
 let build_date = [];
-(async () => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    slowMo: 30,
-    args: ["--lang=ja"],
-  });
-  const page = await browser.newPage();
-  //////////鳩マーク//////////////////
+let building_li;
+exports.nifty = async function nifty(page) {
   await page.goto(
     "https://myhome.nifty.com/chuko/ikkodate/hokkaido-tohoku/fukushima/aizuwakamatsushi/?subtype=buh&isFromSearch=1",
     {
@@ -35,13 +29,13 @@ let build_date = [];
   );
   await page.select('select[name="b2"]', "10000000");
   await sleep(5000);
-  const building_li = await page.$$(".nayose");
+  building_li = await page.$$(".nayose");
 
   console.log(building_li.length);
 
   for (i = 0; i < building_li.length; i++) {
     build_src.push(await getBuildSrc());
-    link.push(await getLink());
+    link.push(await getLink(page));
     address.push(await getTableItem(1));
     traffic.push(await getTableItem(2));
     price.push(await getTableItem(0));
@@ -58,25 +52,25 @@ let build_date = [];
   hatoarray.build_area = build_area;
   hatoarray.build_date = build_date;
   console.log(hatoarray);
-  await browser.close();
+  return hatoarray;
+};
 
-  async function getBuildSrc() {
-    const build_src_base = await building_li[i].$(".mainImageRect > a");
-    const build_src = await build_src_base.$eval("img", (el) => el.src);
-    return build_src;
-  }
-  async function getLink() {
-    const detail_link_base = await building_li[i].$(".mainImageRect > a");
-    const link = await page.evaluate((body) => body.href, detail_link_base);
-    return link;
-  }
-  async function getTableItem(keynum) {
-    const element = await building_li[i].$$(
-      "div.itemContentWrapper.clearfix > dl.itemContent.clearfix > dd"
-    );
-    let element_text = await (
-      await element[keynum].getProperty("textContent")
-    ).jsonValue();
-    return element_text;
-  }
-})();
+async function getBuildSrc() {
+  const build_src_base = await building_li[i].$(".mainImageRect > a");
+  const build_src = await build_src_base.$eval("img", (el) => el.src);
+  return build_src;
+}
+async function getLink(page) {
+  const detail_link_base = await building_li[i].$(".mainImageRect > a");
+  const link = await page.evaluate((body) => body.href, detail_link_base);
+  return link;
+}
+async function getTableItem(keynum) {
+  const element = await building_li[i].$$(
+    "div.itemContentWrapper.clearfix > dl.itemContent.clearfix > dd"
+  );
+  let element_text = await (
+    await element[keynum].getProperty("textContent")
+  ).jsonValue();
+  return element_text;
+}
