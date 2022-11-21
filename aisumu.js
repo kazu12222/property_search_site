@@ -48,7 +48,7 @@ exports.aisumu = async function aisumu(page) {
   hatoarray.land_area = land_area;
   hatoarray.build_area = build_area;
   hatoarray.build_date = build_date;
-  console.log(hatoarray);
+  //console.log(hatoarray);
   return hatoarray;
 };
 
@@ -84,9 +84,7 @@ async function getTraffic() {
   let traffic_text = await (
     await traffic.getProperty("textContent")
   ).jsonValue();
-  console.log(traffic_text);
   traffic_text = traffic_text.replace(/\s+/g, "");
-  console.log(traffic_text);
   return traffic_text;
 }
 async function getLand() {

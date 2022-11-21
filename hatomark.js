@@ -56,7 +56,6 @@ exports.hatomark = async function hatomark(page) {
   hatoarray.land_area = land_area;
   hatoarray.build_area = build_area;
   hatoarray.build_date = build_date;
-  console.log(hatoarray);
   return hatoarray;
 };
 

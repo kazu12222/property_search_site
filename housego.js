@@ -55,7 +55,7 @@ exports.housego = async function housego(page) {
   hatoarray.land_area = land_area;
   hatoarray.build_area = build_area;
   hatoarray.build_date = build_date;
-  console.log(hatoarray);
+  //console.log(hatoarray);
   return hatoarray;
 };
 
